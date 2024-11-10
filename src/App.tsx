@@ -4,16 +4,28 @@ import CurrencyList from './CurrencyList'
 
 function App() {
 const currencies = CurrencyList()
-const [selectedCurrency, setSelectedCurrency] = useState<string>("AED");
+const [selectedCurrency, setSelectedCurrency] = useState<string>("");
+const [valuegbp, setValuegbp]= useState<number>(0)
+const [result, setResult] = useState<number | null>(null)
 
-const handlesubmit = () =>{
-
+const handleConvert = () =>{
+  if (!currencies || !currencies.data[selectedCurrency]) {
+    alert("Currency data not available.");
+    return;
+  }
+  const conversionRate = currencies?.data[selectedCurrency].value
+  // console.log(conversionRate)
+  setResult(valuegbp * conversionRate)
 }
   return (
     <>
-    <form>
+    <form onSubmit={(e) => e.preventDefault()}>
       <label> Value in GBP</label>
-      <input></input>
+      <input 
+      type="number"
+      value={valuegbp} 
+      onChange={(e) => setValuegbp(parseFloat(e.target.value))}>
+      </input>
       <label> Currency </label>
       <select
           value={selectedCurrency}
@@ -32,10 +44,10 @@ Therefore, map doesn’t exist on TopLevel. The map method is for arrays,
 but currencies.data is an object with currency codes as keys (AED, AFN, etc.), 
 so you need to iterate over it using Object.entries() instead of map() directly. */}
 
-      <button onClick={handlesubmit}> Convert </button>
+      <button type="button" onClick={handleConvert}> Convert </button>
     </form>
     <div>
-      Result
+    {result !== null ? <p>{result}</p> : <p>No result yet</p>}
     </div>
     </>
   )
